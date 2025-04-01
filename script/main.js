@@ -87,4 +87,5 @@ function togglePencil() {
 function toggleLine() {
 	state = 1;
 	console.log(state);
+=======
 };
