@@ -1,6 +1,7 @@
 const canvas = document.getElementById("defaultCanvas");
 const pencil = document.getElementById("pencilTool");
 const line = document.getElementById("lineTool");
+const eraser = document.getElementById("eraserTool");
 const ctx = canvas.getContext("2d");
 var state = 0;
 var canvasBackgroundColor =  "#FFFFFF";
@@ -10,6 +11,7 @@ let y = 0;
 
 pencil.onclick = function() {togglePencil()};
 line.onclick = function() {toggleLine()};
+eraser.onclick = function() {toggleEraser()};
 canvas.onmousemove = function() {moveCursor(event)};
 canvas.onmousedown = function() {cursorActivate(event)};
 canvas.onmouseup = function() {cursorDeactivate(event)};
@@ -23,6 +25,11 @@ function moveCursor(e) {
 	if (isDrawing) {
 		if (state == 0) {
 			drawDefault(ctx, x, y, e.offsetX, e.offsetY);
+			x = e.offsetX;
+			y = e.offsetY;
+		}
+		else if(state == 2) {
+			erase(ctx, x, y, e.offsetX, e.offsetY);
 			x = e.offsetX;
 			y = e.offsetY;
 		}
@@ -43,6 +50,9 @@ function cursorDeactivate(e) {
 		else if(state == 1) {
 			console.log(ctx, x, y, e.offsetX, e.offsetY);
 			drawLine(ctx, x, y, e.offsetX, e.offsetY);
+		}
+		else if(state == 2) {
+			erase(ctx, x, y, e.offsetX, e.offsetY);
 		}
 		x = e.offsetX;
 		y = e.offsetY;
@@ -77,7 +87,18 @@ function drawLine(ctx, x1, y1, x2, y2) {
 	}
 	ctx.closePath();
 };
-	
+
+function erase(ctx, x1, y1, x2, y2) {
+	ctx.beginPath();
+	ctx.strokeStyle = canvasBackgroundColor;
+	ctx.lineWidth = 30;
+	ctx.moveTo(x1, y1);
+	ctx.lineTo(x2, y2);
+	if (x1 != x2 && y1 != y2) {
+		ctx.stroke();
+	}
+	ctx.closePath();
+};	
 
 function togglePencil() {
 	state = 0;
@@ -87,5 +108,9 @@ function togglePencil() {
 function toggleLine() {
 	state = 1;
 	console.log(state);
-=======
+};
+
+function toggleEraser() {
+	state = 2;
+	console.log(state);
 };
