@@ -2,9 +2,13 @@ const canvas = document.getElementById("defaultCanvas");
 const pencil = document.getElementById("pencilTool");
 const line = document.getElementById("lineTool");
 const eraser = document.getElementById("eraserTool");
+const colourButton = document.getElementById("colourButton");
+const colour = document.getElementById("colourSelection");
+const colourDisplay = document.getElementById("colourDisplay");
 const ctx = canvas.getContext("2d");
 var state = 0;
-var canvasBackgroundColor =  "#FFFFFF";
+var canvasBackgroundcolour =  "#FFFFFF";
+var pencilColor = "#000000";
 let isDrawing = false;
 let x = 0;
 let y = 0;
@@ -12,6 +16,7 @@ let y = 0;
 pencil.onclick = function() {togglePencil()};
 line.onclick = function() {toggleLine()};
 eraser.onclick = function() {toggleEraser()};
+colourButton.onclick = function() {showColourWindow()};
 canvas.onmousemove = function() {moveCursor(event)};
 canvas.onmousedown = function() {cursorActivate(event)};
 canvas.onmouseup = function() {cursorDeactivate(event)};
@@ -68,7 +73,7 @@ function cursorExit() {
 
 function drawDefault(ctx, x1, y1, x2, y2) {
 	ctx.beginPath();
-	ctx.strokeStyle = "#000000";
+	ctx.strokeStyle = pencilColor;
 	ctx.lineWidth = 10;
 	ctx.moveTo(x1, y1);
 	ctx.lineTo(x2, y2);
@@ -78,7 +83,7 @@ function drawDefault(ctx, x1, y1, x2, y2) {
 
 function drawLine(ctx, x1, y1, x2, y2) {
 	ctx.beginPath();
-	ctx.strokeStyle = "#000000";
+	ctx.strokeStyle = pencilColor;
 	ctx.lineWidth = 10;
 	ctx.moveTo(x1, y1);
 	ctx.lineTo(x2, y2);
@@ -90,7 +95,7 @@ function drawLine(ctx, x1, y1, x2, y2) {
 
 function erase(ctx, x1, y1, x2, y2) {
 	ctx.beginPath();
-	ctx.strokeStyle = canvasBackgroundColor;
+	ctx.strokeStyle = canvasBackgroundcolour;
 	ctx.lineWidth = 30;
 	ctx.moveTo(x1, y1);
 	ctx.lineTo(x2, y2);
@@ -98,7 +103,39 @@ function erase(ctx, x1, y1, x2, y2) {
 		ctx.stroke();
 	}
 	ctx.closePath();
-};	
+};
+
+function setColour() {
+	red = parseInt(document.getElementById("red").value);
+	green = parseInt(document.getElementById("green").value);
+	blue = parseInt(document.getElementById("blue").value);
+	rgb = ((red << 16) + (green << 8) + blue).toString(16).toUpperCase();
+	x = rgb.length
+	if (rgb.length < 6) {
+		for (var i = 0; i < (6 - x);  i++)
+		{
+		rgb = "0" + rgb;
+		}
+	}
+	pencilColor = "#" + rgb;
+	console.log(pencilColor);
+	colourDisplay.innerHTML = pencilColor;
+	colourDisplay.style.backgroundColor = pencilColor;
+	if ((red + green + blue) > 255) {
+		colourDisplay.style.color = "#000000";
+	}
+	else {
+		colourDisplay.style.color = "#FFFFFF";
+	}
+}
+
+function showColourWindow() {
+	colour.style.display = "block";
+}
+
+function hideColourWindow() {
+	colour.style.display = "none";
+}
 
 function togglePencil() {
 	state = 0;

@@ -20,7 +20,16 @@
 			<h1> Lautan Grafit </h1>
 			<p> Placeholder paragraph </p>
 		
-			<canvas id="defaultCanvas" width="768" height="512"><canvas>
+			<canvas id="defaultCanvas" width="768" height="512"></canvas>
+			<button id="colourButton">Colour</button>
+			<dialog id="colourSelection">
+				<p id="colourDisplay">#000000</p>
+				<p>Select a colour:
+					<input id="red" max="255" min="0" onInput="setColour()" type="range" value= "0">
+					<input id="green" max="255" min="0" onInput="setColour()" type="range" value= "0">
+					<input id="blue" max="255" min="0" onInput="setColour()" type="range" value= "0">
+				</p>
+			</dialog>
 			<script src="script/main.js"></script>
 		</div>
 	</body>
