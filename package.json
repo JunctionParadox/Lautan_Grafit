@@ -1,0 +1,22 @@
+{
+  "name": "lautan_grafit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cypress.config.js",
+  "devDependencies": {
+    "cypress": "^14.3.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JunctionParadox/PSEMO_S1162353_2425.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JunctionParadox/PSEMO_S1162353_2425/issues"
+  },
+  "homepage": "https://github.com/JunctionParadox/PSEMO_S1162353_2425#readme"
+}
