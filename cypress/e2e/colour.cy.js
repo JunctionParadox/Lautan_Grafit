@@ -1,6 +1,6 @@
 describe('Colour selection test', () => {
   it('passes', () => {
-    cy.visit('index.html')
+    cy.visit('public/index.html')
 
 	cy.get('#colourButton').click({ force: true});;
 	cy.get('#red').invoke('val', 25).trigger('input');

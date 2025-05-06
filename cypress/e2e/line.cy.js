@@ -1,6 +1,6 @@
 describe('Line drawing test', () => {
   it('passes', () => {
-    cy.visit('index.html')
+    cy.visit('public/index.html')
 	
 	cy.get('#lineTool').click({ force: true });
 	cy.get('#defaultCanvas')

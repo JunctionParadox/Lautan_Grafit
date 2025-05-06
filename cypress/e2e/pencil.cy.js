@@ -1,6 +1,6 @@
 describe('Dot drawing test', () => {
   it('passes', () => {
-    cy.visit('index.html')
+    cy.visit('public/index.html')
 	
 	cy.get('#pencilTool').click({ force: true });
 	cy.get('#defaultCanvas')
