@@ -6,6 +6,7 @@ const bucket = document.getElementById("bucketTool");
 const colourButton = document.getElementById("colourButton");
 const colour = document.getElementById("colourSelection");
 const colourDisplay = document.getElementById("colourDisplay");
+const sizeDisplay = document.getElementById("sizeDisplay")
 const lock = document.getElementById("lockToggle");
 const reset = document.getElementById("resetTool");
 const ctx = canvas.getContext("2d");
@@ -14,6 +15,7 @@ var data = imageData.data;
 var state = 0;
 var canvasBackgroundcolour =  "#FFFFFF";
 var pencilColor = "#000000";
+var pencilSize = 10;
 let isDrawing = false;
 let x = 0;
 let y = 0;
@@ -86,7 +88,7 @@ function cursorExit() {
 function drawDefault(ctx, x1, y1, x2, y2) {
 	ctx.beginPath();
 	ctx.strokeStyle = pencilColor;
-	ctx.lineWidth = 10;
+	ctx.lineWidth = pencilSize;
 	ctx.moveTo(x1, y1);
 	ctx.lineTo(x2, y2);
 	ctx.stroke();
@@ -95,7 +97,7 @@ function drawDefault(ctx, x1, y1, x2, y2) {
 
 function drawLine(ctx, x1, y1, x2, y2) {
 	ctx.beginPath();
-	ctx.strokeStyle = pencilColor;
+	ctx.strokeStyle = pencilSize;
 	ctx.lineWidth = 10;
 	ctx.moveTo(x1, y1);
 	ctx.lineTo(x2, y2);
@@ -139,6 +141,11 @@ function setColour() {
 	else {
 		colourDisplay.style.color = "#FFFFFF";
 	}
+}
+
+function setPencilSize() {
+	pencilSize = document.getElementById("pencilsize").value;
+	sizeDisplay.innerHTML = pencilSize + " px";
 }
 
 //img = new Image();
