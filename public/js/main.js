@@ -2,10 +2,15 @@ const canvas = document.getElementById("defaultCanvas");
 const pencil = document.getElementById("pencilTool");
 const line = document.getElementById("lineTool");
 const eraser = document.getElementById("eraserTool");
+const bucket = document.getElementById("bucketTool");
 const colourButton = document.getElementById("colourButton");
 const colour = document.getElementById("colourSelection");
 const colourDisplay = document.getElementById("colourDisplay");
+const lock = document.getElementById("lockToggle");
+const reset = document.getElementById("resetTool");
 const ctx = canvas.getContext("2d");
+var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+var data = imageData.data;
 var state = 0;
 var canvasBackgroundcolour =  "#FFFFFF";
 var pencilColor = "#000000";
@@ -16,7 +21,10 @@ let y = 0;
 pencil.onclick = function() {togglePencil()};
 line.onclick = function() {toggleLine()};
 eraser.onclick = function() {toggleEraser()};
+bucket.onclick = function() {toggleBucket()};
 colourButton.onclick = function() {showColourWindow()};
+lock.onchange = function() {toggleLock()};
+reset.onclick = function() {resetCanvas(ctx)};
 canvas.onmousemove = function() {moveCursor(event)};
 canvas.onmousedown = function() {cursorActivate(event)};
 canvas.onmouseup = function() {cursorDeactivate(event)};
@@ -45,6 +53,10 @@ function cursorActivate(e) {
 	x = e.offsetX;
 	y = e.offsetY;
 	isDrawing = true;
+	if (state == 3)
+	{
+		flood(ctx, e, y);
+	}
 };
 
 function cursorDeactivate(e) {
@@ -129,6 +141,25 @@ function setColour() {
 	}
 }
 
+//img = new Image();
+
+/* function flood() {
+	for(let i = 0; i < data.length; i += 4) {
+		const red = data[i];
+		const green = data[i + 1];
+		const blue = data[i + 2];
+		const alpha = data[i + 3];
+		console.log(red, green, blue, alpha)
+	}
+	ctx.drawImage(img, 0, 0);
+}  */
+
+//img.src = "wawa.png";
+
+function flood(x, y)
+{
+}
+
 function showColourWindow() {
 	colour.style.display = "block";
 }
@@ -151,3 +182,26 @@ function toggleEraser() {
 	state = 2;
 	console.log(state);
 };
+
+function toggleBucket() {
+	state = 3;
+	console.log(state);
+};
+
+function toggleLock() {
+	if (lock.checked == true) {
+		reset.disabled = false;
+	}
+	else {
+		reset.disabled = true;
+	}
+}
+
+function resetCanvas(ctx) {
+	ctx.fillStyle = "#FFFFFF";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	state = 0;
+	pencilColor = "#000000";
+	lock.checked = false;
+	toggleLock();
+}
