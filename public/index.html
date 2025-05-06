@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> TITEL HAHA </title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	
+	<body>
+		<div id="menubar">
+			<a class="option">file</a>
+			<a class="option">edit</a>
+			<a class="option">image</a>
+		</div>
+		<div id="toolbar">
+			<button id="pencilTool">•</button>
+			<button id="lineTool">/</button>
+			<button id="eraserTool">X</button>
+			<button id="bucketTool">B</button>
+			<p></p>
+			<img src="images/Lock_Icon_black.png" width="24" height="24">
+			<label id="resetLock">
+				<input id="lockToggle" type="checkbox">
+				<span class="slider round"></span>
+			</label>
+			<button id="resetTool" disabled>Reset canvas</button>
+		</div>
+		<div id="main">
+			<h1> Lautan Grafit </h1>
+			<p> Placeholder paragraph </p>
+		
+			<canvas id="defaultCanvas" width="768" height="512"></canvas>
+			<button id="colourButton">Colour</button>
+			<dialog id="colourSelection">
+				<p id="colourDisplay">#000000</p>
+				<p>Select a colour:
+					<input id="red" max="255" min="0" onInput="setColour()" type="range" value= "0">
+					<input id="green" max="255" min="0" onInput="setColour()" type="range" value= "0">
+					<input id="blue" max="255" min="0" onInput="setColour()" type="range" value= "0">
+				</p>
+			</dialog>
+			<script src="./js/main.js"></script>
+		</div>
+	</body>
+</html>
