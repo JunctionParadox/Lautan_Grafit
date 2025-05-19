@@ -212,3 +212,24 @@ function resetCanvas(ctx) {
 	lock.checked = false;
 	toggleLock();
 }
+
+const save = document.getElementById("saveButton");
+save.onclick = function() {saveCanvas()};
+
+async function saveCanvas() {
+	value = document.getElementById("saveFileName").value;
+	var imageFile = canvas.toDataURL("image/png");
+	//const formData = new FormData();
+	//formData.append('file', image);
+	const url = "http://localhost:3000/images/" + value
+	try {
+		const response = await fetch(url, {
+			method: "POST",
+			body: imageFile,
+		})
+		console.log(response)
+	}
+	catch (error) {
+		console.error(error.message);
+	}
+}
