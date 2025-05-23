@@ -7,7 +7,7 @@
 	
 	<body>
 		<div id="menubar">
-			<a class="option">file</a>
+			<select class="option">file</select>
 			<a class="option">edit</a>
 			<a class="option">image</a>
 		</div>
@@ -41,10 +41,16 @@
 					<input id="green" max="255" min="0" onInput="setColour()" type="range" value= "0">
 					<input id="blue" max="255" min="0" onInput="setColour()" type="range" value= "0">
 				</p>
+				<button id="colourHide">Close</button>
 			</dialog>
 			<p></p>
 			<input id="saveFileName" type="text"></input>
 			<button id="saveButton" type="button">upload</button>
+			<p></p>
+			<input id="loadFileName" type="text"></input>
+			<button id="loadButton" type="button">loadimagelist</button>
+			<button id="loadTest" type="button">loadimage</button>
+			<div id="fileList"></div>
 			<script src="./js/main.js"></script>
 		</div>
 	</body>

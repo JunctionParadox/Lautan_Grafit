@@ -5,10 +5,12 @@ const eraser = document.getElementById("eraserTool");
 const bucket = document.getElementById("bucketTool");
 const colourButton = document.getElementById("colourButton");
 const colour = document.getElementById("colourSelection");
-const colourDisplay = document.getElementById("colourDisplay");
-const sizeDisplay = document.getElementById("sizeDisplay")
+const colourDisplay = document.querySelector("colourDisplay");
+const colourHide = document.getElementById("colourHide");
+const sizeDisplay = document.getElementById("sizeDisplay");
 const lock = document.getElementById("lockToggle");
 const reset = document.getElementById("resetTool");
+const fileList = document.getElementById("fileList");
 const ctx = canvas.getContext("2d");
 var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 var data = imageData.data;
@@ -25,6 +27,7 @@ line.onclick = function() {toggleLine()};
 eraser.onclick = function() {toggleEraser()};
 bucket.onclick = function() {toggleBucket()};
 colourButton.onclick = function() {showColourWindow()};
+colourHide.onclick = function() {hideColourWindow()};
 lock.onchange = function() {toggleLock()};
 reset.onclick = function() {resetCanvas(ctx)};
 canvas.onmousemove = function() {moveCursor(event)};
@@ -132,7 +135,6 @@ function setColour() {
 		}
 	}
 	pencilColor = "#" + rgb;
-	console.log(pencilColor);
 	colourDisplay.innerHTML = pencilColor;
 	colourDisplay.style.backgroundColor = pencilColor;
 	if ((red + green + blue) > 255) {
@@ -168,11 +170,11 @@ function flood(x, y)
 }
 
 function showColourWindow() {
-	colour.style.display = "block";
+	colour.show();
 }
 
 function hideColourWindow() {
-	colour.style.display = "none";
+	colour.close();
 }
 
 function togglePencil() {
@@ -216,20 +218,38 @@ function resetCanvas(ctx) {
 const save = document.getElementById("saveButton");
 save.onclick = function() {saveCanvas()};
 
+const load = document.getElementById("loadButton");
+load.onclick = function() {loadCanvas()};
+
 async function saveCanvas() {
-	value = document.getElementById("saveFileName").value;
-	var imageFile = canvas.toDataURL("image/png");
-	//const formData = new FormData();
-	//formData.append('file', image);
-	const url = "http://localhost:3000/images/" + value
-	try {
-		const response = await fetch(url, {
-			method: "POST",
-			body: imageFile,
-		})
-		console.log(response)
-	}
-	catch (error) {
-		console.error(error.message);
-	}
+	var value = document.getElementById("saveFileName").value;
+	const data = canvas.toDataURL("image/png")
+	const url = "http://localhost:3000/images/" + value;
+	const response = await fetch(url, {
+		method: "POST",
+		body: data,
+	})
+	.then(response => {
+		if (response.ok) return response;
+		else throw Error("Server returned ${response.status}: ${repsonse.statusText}") 
+	})
+	//.then(response => {console.log(response.text())})
+	.catch(err => {
+		alert(err);
+	});
+	console.log(response.status)
+}
+
+async function loadCanvas() {
+	const url = "http://localhost:3000/images/"
+	const response = await fetch(url)
+	.then(response => {
+		if (response.ok) {
+			return response.json()
+			.then((data) => {fileList.innerHTML = JSON.stringify(data)});
+		}
+	})
+	.catch(err => {
+		alert(err);
+	})
 }
