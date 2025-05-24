@@ -221,10 +221,14 @@ save.onclick = function() {saveCanvas()};
 const load = document.getElementById("loadButton");
 load.onclick = function() {loadCanvas()};
 
+const loadTest = document.getElementById("loadTest")
+loadTest.onclick = function() {loadImage(ctx)};
+
 async function saveCanvas() {
 	var value = document.getElementById("saveFileName").value;
 	const data = canvas.toDataURL("image/png")
 	const url = "http://localhost:3000/images/" + value;
+	console.log(data);
 	const response = await fetch(url, {
 		method: "POST",
 		body: data,
@@ -233,7 +237,6 @@ async function saveCanvas() {
 		if (response.ok) return response;
 		else throw Error("Server returned ${response.status}: ${repsonse.statusText}") 
 	})
-	//.then(response => {console.log(response.text())})
 	.catch(err => {
 		alert(err);
 	});
@@ -251,5 +254,28 @@ async function loadCanvas() {
 	})
 	.catch(err => {
 		alert(err);
+	})
+}
+
+async function loadImage(ctx) {
+	var imageFile = new Image();
+	var objectUrl
+	const url = "http://localhost:3000/images/syzygy"
+	const response = await fetch(url, {
+		headers: {"Content-type" : "application/json"
+			}
+		}
+	)
+	.then(response => {
+		if (response.ok) {
+			return response.text()
+			.then((data) => {
+				//console.log(data);
+				pizza = "data:image\/png;base64," + data;
+				imageFile.src = pizza;
+				console.log( "data:image\/png;base64," + data)
+			})
+			.then(() => ctx.drawImage(imageFile, 0, 0));
+		}
 	})
 }
