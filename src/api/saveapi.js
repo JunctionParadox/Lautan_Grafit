@@ -4,10 +4,8 @@ const directory = path.join(__dirname, 'images');
 const con = require('../../data/db_connection');
 
 module.exports = function storeImage(image, url) {
-	//console.log(image)
-	//console.log(url)
-	fileName = url.replace("/images/", "\\")
-	filePath = directory + fileName + ".png";
+	var fileName = url.replace("/images/", "\\")
+	var filePath = directory + fileName + ".png";
 	console.log(directory + fileName + ".png")
 	try {
 		var imageFile = image.replace(/^data:image\/png;base64,/, "")
@@ -15,7 +13,7 @@ module.exports = function storeImage(image, url) {
 		con.connect(function(err) {
 			if (err) throw err;
 			console.log("Connection succesfull");
-			var query = 'INSERT INTO grafitdb.images VALUES (0, "' + fileName + '")';
+			var query = 'INSERT INTO images VALUES (0, "' + fileName + '")';
 			con.query(query, function (err, result) {
 				if (err) throw err;
 				console.log("Record inserted succesfully");
