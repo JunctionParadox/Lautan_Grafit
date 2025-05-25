@@ -19,11 +19,9 @@ router.get('/')
 router.get('/images/', async (ctx) => {
 	ctx.body = await loadPaths()
     console.log(ctx.body)
-	//ctx.body = "wawa";
 })
 router.get('/images/:filename', async (ctx) => {
-	ctx.body = await loadImage()
-	console.log(ctx.body)
+	ctx.body = await loadImage(ctx.request.url)
 })
 router.post('/images/:filename', (ctx) => {
 	ctx.body = ctx.request.body,

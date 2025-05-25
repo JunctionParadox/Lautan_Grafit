@@ -4,13 +4,13 @@ const line = document.getElementById("lineTool");
 const eraser = document.getElementById("eraserTool");
 const bucket = document.getElementById("bucketTool");
 const colourButton = document.getElementById("colourButton");
-const colour = document.getElementById("colourSelection");
-const colourDisplay = document.querySelector("colourDisplay");
+const colourDisplay = document.getElementById("colourDisplay");
 const colourHide = document.getElementById("colourHide");
 const sizeDisplay = document.getElementById("sizeDisplay");
 const lock = document.getElementById("lockToggle");
 const reset = document.getElementById("resetTool");
 const fileList = document.getElementById("fileList");
+const fileButton = document.getElementById("file");
 const ctx = canvas.getContext("2d");
 var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 var data = imageData.data;
@@ -170,11 +170,11 @@ function flood(x, y)
 }
 
 function showColourWindow() {
-	colour.show();
+	document.getElementById("colourSelection").show();
 }
 
 function hideColourWindow() {
-	colour.close();
+	document.getElementById("colourSelection").close();
 }
 
 function togglePencil() {
@@ -224,6 +224,8 @@ load.onclick = function() {loadCanvas()};
 const loadTest = document.getElementById("loadTest")
 loadTest.onclick = function() {loadImage(ctx)};
 
+fileButton.onclick = function() {showFileList()};
+
 async function saveCanvas() {
 	var value = document.getElementById("saveFileName").value;
 	const data = canvas.toDataURL("image/png")
@@ -249,7 +251,23 @@ async function loadCanvas() {
 	.then(response => {
 		if (response.ok) {
 			return response.json()
-			.then((data) => {fileList.innerHTML = JSON.stringify(data)});
+			.then((data) => {
+				const dialog = document.createElement("dialog");
+				const dialogBase = document.createTextNode("Please select a file");
+				dialog.appendChild(dialogBase);
+				const datamap = data.map((data) => {
+					const newDiv = document.createElement("button");
+					newDiv.className = "loadList";
+					newDiv.onclick = function() {selectFile()};
+					newDiv.ondblclick = function() {dialog.close(), loadImage(ctx, data.path)};
+					const textNode = document.createTextNode(data.path);
+					newDiv.appendChild(textNode);
+					dialog.appendChild(newDiv);
+				})
+				document.body.appendChild(dialog);
+				dialog.showModal();
+				}
+			);
 		}
 	})
 	.catch(err => {
@@ -257,10 +275,10 @@ async function loadCanvas() {
 	})
 }
 
-async function loadImage(ctx) {
+async function loadImage(ctx, data) {
+	console.log(data);
 	var imageFile = new Image();
-	var objectUrl
-	const url = "http://localhost:3000/images/syzygy"
+	const url = "http://localhost:3000/images/" + data;
 	const response = await fetch(url, {
 		headers: {"Content-type" : "application/json"
 			}
@@ -275,7 +293,12 @@ async function loadImage(ctx) {
 				imageFile.src = pizza;
 				console.log( "data:image\/png;base64," + data)
 			})
+			.then(() => ctx.reset())
 			.then(() => ctx.drawImage(imageFile, 0, 0));
 		}
 	})
+}
+
+function showFileList() {
+	loadCanvas()
 }
