@@ -215,16 +215,23 @@ function resetCanvas(ctx) {
 	toggleLock();
 }
 
-const save = document.getElementById("saveButton");
-save.onclick = function() {saveCanvas()};
-
-const load = document.getElementById("loadButton");
-load.onclick = function() {loadCanvas()};
-
-const loadTest = document.getElementById("loadTest")
-loadTest.onclick = function() {loadImage(ctx)};
-
 fileButton.onclick = function() {showFileList()};
+
+function showFileList() {
+	const optionList = document.getElementById("optionList")
+	optionList.showModal();
+	const saveOption = document.getElementById("saveOption");
+	saveOption.onclick = function() {optionList.close(), showSaveDialog()}
+
+	const loadOption = document.getElementById("loadOption");
+	loadOption.onclick = function() {optionList.close(), loadCanvas()};
+}
+
+function showSaveDialog() {
+	document.getElementById("saveDialog").showModal();
+	const save = document.getElementById("saveButton");
+	save.onclick = function() {saveCanvas()};
+}
 
 async function saveCanvas() {
 	var value = document.getElementById("saveFileName").value;
@@ -243,6 +250,7 @@ async function saveCanvas() {
 		alert(err);
 	});
 	console.log(response.status)
+	document.getElementById("saveDialog").close();
 }
 
 async function loadCanvas() {
@@ -256,12 +264,14 @@ async function loadCanvas() {
 				const dialogBase = document.createTextNode("Please select a file");
 				dialog.appendChild(dialogBase);
 				const datamap = data.map((data) => {
-					const newDiv = document.createElement("button");
-					newDiv.className = "loadList";
-					newDiv.onclick = function() {selectFile()};
-					newDiv.ondblclick = function() {dialog.close(), loadImage(ctx, data.path)};
+					const newDiv = document.createElement("div");
+					const newButton = document.createElement("button");
+					newButton.className = "loadList";
+					//newButton.onclick = function() {selectFile()};
+					newButton.ondblclick = function() {dialog.close(), loadImage(ctx, data.path)};
 					const textNode = document.createTextNode(data.path);
-					newDiv.appendChild(textNode);
+					newButton.appendChild(textNode);
+					newDiv.appendChild(newButton);
 					dialog.appendChild(newDiv);
 				})
 				document.body.appendChild(dialog);
@@ -297,8 +307,4 @@ async function loadImage(ctx, data) {
 			.then(() => ctx.drawImage(imageFile, 0, 0));
 		}
 	})
-}
-
-function showFileList() {
-	loadCanvas()
 }
