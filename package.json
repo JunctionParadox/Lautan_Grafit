@@ -23,6 +23,7 @@
   "homepage": "https://github.com/JunctionParadox/PSEMO_S1162353_2425#readme",
   "dependencies": {
     "@koa/cors": "^5.0.0",
+    "bcrypt": "^6.0.0",
     "ejs": "^3.1.10",
     "jest": "^29.7.0",
     "koa": "^3.0.0",
