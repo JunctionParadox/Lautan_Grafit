@@ -8,8 +8,8 @@
     "cypress": "^14.3.0"
   },
   "scripts": {
-    "build": "node --env-file app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node --env-file=.env app.js",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
