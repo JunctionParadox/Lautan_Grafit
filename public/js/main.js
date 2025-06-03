@@ -22,6 +22,8 @@ let isDrawing = false;
 let x = 0;
 let y = 0;
 
+window.onbeforeunload = function() {saveTemp()};
+window.onload = function() {initialize()};
 pencil.onclick = function() {togglePencil()};
 line.onclick = function() {toggleLine()};
 eraser.onclick = function() {toggleEraser()};
@@ -305,8 +307,77 @@ async function loadImage(ctx, data) {
 				imageFile.src = pizza;
 				console.log( "data:image\/png;base64," + data)
 			})
-			.then(() => ctx.reset())
+			.then(() => ctx.fillStyle = "#FFFFFF", ctx.fillRect(0, 0, canvas.width, canvas.height))
 			.then(() => ctx.drawImage(imageFile, 0, 0));
 		}
 	})
+}
+
+async function initialize() {
+	if (document.cookie.match(/^(.*;)?\s*Session\s*=\s*[^;]+(.*)?$/)) {
+		loadTemp();
+	}
+	else {
+		const url = "http://localhost:3000/session/"
+		const response = await fetch(url)
+		.then(response => {
+			if (response.ok) {
+				return response.text()
+				.then((data) => {
+					console.log(data)
+					document.cookie = `Session=${data}; Secure`;
+				})
+			}
+		})
+	}
+}
+
+async function loadTemp() {
+	var imageFile = new Image();
+	const cookie = (document.cookie.match(/^(?:.*;)?\s*Session\s*=\s*([^;]+)(?:.*)?$/)||[,null])[1]
+	if (cookie != null) {
+		const url = "http://localhost:3000/temp/" + cookie
+		const response = await fetch(url, {
+			method: "GET",
+			headers: {
+				sessionId: cookie
+			}
+		})
+		.then((response) => {
+			if (response.ok) {
+				return response.text()
+				.then((data) => {
+					pizza = "data:image\/png;base64," + data;
+					imageFile.src = pizza;
+					console.log( "data:image\/png;base64," + data)
+				})
+				.then(() => ctx.fillStyle = "#FFFFFF", ctx.fillRect(0, 0, canvas.width, canvas.height))
+				.then(() => ctx.drawImage(imageFile, 0, 0));
+			}
+		})
+	}
+	else {
+		document.cookie = `Haha='killyourself'; Secure`;
+	}
+}
+
+async function saveTemp() {
+	const data = canvas.toDataURL("image/png");
+	const cookie = (document.cookie.match(/^(?:.*;)?\s*Session\s*=\s*([^;]+)(?:.*)?$/)||[,null])[1]
+	if (cookie != null) {
+		const url = "http://localhost:3000/temp/" + cookie
+		const response = await fetch(url, {
+			method: "POST",
+			body: data,
+			headers: {
+				sessionId: cookie
+			}
+		})
+		.then((response) => {
+			return response.json()
+		})
+	}
+	else {
+		document.cookie = `Haha='killyourself'; Secure`;
+	}
 }

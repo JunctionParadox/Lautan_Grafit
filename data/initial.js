@@ -18,4 +18,14 @@ con.connect(function(err) {
 		if (err) throw err;
 		console.log("Table created");
 	});
+	con.query("CREATE TABLE IF NOT EXISTS grafitdb.tokens (id int AUTO_INCREMENT PRIMARY KEY, value VARCHAR(255) NOT NULL)", 
+	function (err, result) {
+		if (err) throw err;
+		console.log("Table created");
+	});
+	con.query("CREATE TABLE IF NOT EXISTS grafitdb.tempimages (id int AUTO_INCREMENT PRIMARY KEY, filename VARCHAR(255) NOT NULL)", 
+	function (err, result) {
+		if (err) throw err;
+		console.log("Table created");
+	});
 });
