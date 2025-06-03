@@ -4,11 +4,13 @@ const directory = path.join(__dirname, 'images');
 const con = require('../../data/db_connection');
 
 module.exports = function storeImage(image, url) {
-	var fileName = url.replace("/images/", "\\")
-	var filePath = directory + fileName + ".png";
+	var fileName = url.replace("/images/", "")
+	var filePath = directory + "\\" + fileName + ".png";
 	console.log(directory + fileName + ".png")
+
 	try {
 		var imageFile = image.replace(/^data:image\/png;base64,/, "")
+		console.log(filePath + '\\');
 		fs.writeFileSync(filePath, imageFile, 'base64');
 		con.connect(function(err) {
 			if (err) throw err;

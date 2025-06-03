@@ -224,7 +224,7 @@ function showFileList() {
 	saveOption.onclick = function() {optionList.close(), showSaveDialog()}
 
 	const loadOption = document.getElementById("loadOption");
-	loadOption.onclick = function() {optionList.close(), loadCanvas()};
+	loadOption.onclick = function() {optionList.close(), loadImageList()};
 }
 
 function showSaveDialog() {
@@ -236,8 +236,8 @@ function showSaveDialog() {
 async function saveCanvas() {
 	var value = document.getElementById("saveFileName").value;
 	const data = canvas.toDataURL("image/png")
+	//const url = "http://lautangrafit.nl/images/" + value;
 	const url = "http://localhost:3000/images/" + value;
-	console.log(data);
 	const response = await fetch(url, {
 		method: "POST",
 		body: data,
@@ -249,11 +249,12 @@ async function saveCanvas() {
 	.catch(err => {
 		alert(err);
 	});
-	console.log(response.status)
+	console.log(response)
 	document.getElementById("saveDialog").close();
 }
 
-async function loadCanvas() {
+async function loadImageList() {
+	//const url = "http://lautangrafit.nl/images/"
 	const url = "http://localhost:3000/images/"
 	const response = await fetch(url)
 	.then(response => {
@@ -288,6 +289,7 @@ async function loadCanvas() {
 async function loadImage(ctx, data) {
 	console.log(data);
 	var imageFile = new Image();
+	//const url = "http://lautangrafit.nl/images/" + data;
 	const url = "http://localhost:3000/images/" + data;
 	const response = await fetch(url, {
 		headers: {"Content-type" : "application/json"
