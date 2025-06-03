@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "type": "commonjs",
   "devDependencies": {
     "cypress": "^14.3.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node --env-file=.env app.js",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -20,7 +22,14 @@
   },
   "homepage": "https://github.com/JunctionParadox/PSEMO_S1162353_2425#readme",
   "dependencies": {
+    "@koa/cors": "^5.0.0",
     "ejs": "^3.1.10",
-    "express": "^5.1.0"
+    "jest": "^29.7.0",
+    "koa": "^3.0.0",
+    "koa-body": "^6.0.1",
+    "koa-router": "^13.0.1",
+    "koa-static": "^5.0.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.14.1"
   }
 }

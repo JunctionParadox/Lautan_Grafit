@@ -1,17 +1,40 @@
-const express = require('express');
-var ejs = require('ejs');
-var path = require('path');
-const app = express();
-const port = 3000;
+const Koa = require('koa');
+const serve = require ('koa-static');
+const Router = require('koa-router');
+const { koaBody } = require('koa-body');
+const path = require('path')
+const storeImage = require('./src/api/saveapi');
+const loadPaths = require('./src/api/loadapi');
+const loadImage = require('./src/api/loadapi_image');
+const con = require('./data/db_connection');
+const cors = require('@koa/cors');
 
-app.use(express.static(path.resolve('./public')));
+const app = module.exports = new Koa();
+const router = new Router();
+app.use(koaBody({jsonLimit: "50mb", formLimit: "50mb", textLimit: "50mb"}));
 
-app.engine('html', ejs.renderFile);
-app.set('view engine', ejs);
-app.set('public', __dirname);
+app.use(cors());
+app.use(serve('./public'));
+router.get('/')
+router.get('/images/', async (ctx) => {
+	ctx.body = await loadPaths()
+    console.log(ctx.body)
+})
+router.get('/images/:filename', async (ctx) => {
+	ctx.body = await loadImage(ctx.request.url)
+})
+router.post('/images/:filename', (ctx) => {
+	ctx.body = ctx.request.body,
+	console.log(ctx.request),
+	storeImage(ctx.body, ctx.request.url);
+})
+app.use(router.routes());
+app.use(router.routes()).use(router.allowedMethods());
 
-app.get('/', (req, res) => {
-    res.render('public/index.html');
-});
+//async function index(ctx) {
+//	await ctx.render('index');
+//}
 
-app.listen(port);
+app.listen(3000, () => {
+	console.log('Connection succesfull')
+})

@@ -117,3 +117,11 @@ input:checked + .slider:before {
 	border: 1px solid #000000;
 	image-rendering: pixelated;
 }
+
+#optionlist {
+	z-index: 20;
+}
+
+.option {
+	background-color: #7F7F7F;
+}

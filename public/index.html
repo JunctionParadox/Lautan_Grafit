@@ -7,9 +7,15 @@
 	
 	<body>
 		<div id="menubar">
-			<a class="option">file</a>
-			<a class="option">edit</a>
-			<a class="option">image</a>
+			<button id="file" class="option">file</button>
+				<dialog id="optionList">
+					<div id="saveOption">Save image</div>
+					<div id="loadOption">Load image</div>
+					<div>Save image (local storage)</div>
+					<div>Load image (local storage)</div>
+				</dialog>
+			<button class="option">edit</button>
+			<button class="option">image</button>
 		</div>
 		<div id="toolbar">
 			<button id="pencilTool">•</button>
@@ -41,7 +47,15 @@
 					<input id="green" max="255" min="0" onInput="setColour()" type="range" value= "0">
 					<input id="blue" max="255" min="0" onInput="setColour()" type="range" value= "0">
 				</p>
+				<button id="colourHide">Close</button>
 			</dialog>
+
+			<dialog id= "saveDialog">
+				Select a name for your image
+				<input id="saveFileName" type="text"></input>
+				<button id="saveButton" type="button">upload</button>
+			</dialog>
+			
 			<script src="./js/main.js"></script>
 		</div>
 	</body>

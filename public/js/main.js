@@ -4,11 +4,13 @@ const line = document.getElementById("lineTool");
 const eraser = document.getElementById("eraserTool");
 const bucket = document.getElementById("bucketTool");
 const colourButton = document.getElementById("colourButton");
-const colour = document.getElementById("colourSelection");
 const colourDisplay = document.getElementById("colourDisplay");
-const sizeDisplay = document.getElementById("sizeDisplay")
+const colourHide = document.getElementById("colourHide");
+const sizeDisplay = document.getElementById("sizeDisplay");
 const lock = document.getElementById("lockToggle");
 const reset = document.getElementById("resetTool");
+const fileList = document.getElementById("fileList");
+const fileButton = document.getElementById("file");
 const ctx = canvas.getContext("2d");
 var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 var data = imageData.data;
@@ -25,6 +27,7 @@ line.onclick = function() {toggleLine()};
 eraser.onclick = function() {toggleEraser()};
 bucket.onclick = function() {toggleBucket()};
 colourButton.onclick = function() {showColourWindow()};
+colourHide.onclick = function() {hideColourWindow()};
 lock.onchange = function() {toggleLock()};
 reset.onclick = function() {resetCanvas(ctx)};
 canvas.onmousemove = function() {moveCursor(event)};
@@ -132,7 +135,6 @@ function setColour() {
 		}
 	}
 	pencilColor = "#" + rgb;
-	console.log(pencilColor);
 	colourDisplay.innerHTML = pencilColor;
 	colourDisplay.style.backgroundColor = pencilColor;
 	if ((red + green + blue) > 255) {
@@ -168,11 +170,11 @@ function flood(x, y)
 }
 
 function showColourWindow() {
-	colour.style.display = "block";
+	document.getElementById("colourSelection").show();
 }
 
 function hideColourWindow() {
-	colour.style.display = "none";
+	document.getElementById("colourSelection").close();
 }
 
 function togglePencil() {
@@ -211,4 +213,100 @@ function resetCanvas(ctx) {
 	pencilColor = "#000000";
 	lock.checked = false;
 	toggleLock();
+}
+
+fileButton.onclick = function() {showFileList()};
+
+function showFileList() {
+	const optionList = document.getElementById("optionList")
+	optionList.showModal();
+	const saveOption = document.getElementById("saveOption");
+	saveOption.onclick = function() {optionList.close(), showSaveDialog()}
+
+	const loadOption = document.getElementById("loadOption");
+	loadOption.onclick = function() {optionList.close(), loadImageList()};
+}
+
+function showSaveDialog() {
+	document.getElementById("saveDialog").showModal();
+	const save = document.getElementById("saveButton");
+	save.onclick = function() {saveCanvas()};
+}
+
+async function saveCanvas() {
+	var value = document.getElementById("saveFileName").value;
+	const data = canvas.toDataURL("image/png")
+	//const url = "http://lautangrafit.nl/images/" + value;
+	const url = "http://localhost:3000/images/" + value;
+	const response = await fetch(url, {
+		method: "POST",
+		body: data,
+	})
+	.then(response => {
+		if (response.ok) return response;
+		else throw Error("Server returned ${response.status}: ${repsonse.statusText}") 
+	})
+	.catch(err => {
+		alert(err);
+	});
+	console.log(response)
+	document.getElementById("saveDialog").close();
+}
+
+async function loadImageList() {
+	//const url = "http://lautangrafit.nl/images/"
+	const url = "http://localhost:3000/images/"
+	const response = await fetch(url)
+	.then(response => {
+		if (response.ok) {
+			return response.json()
+			.then((data) => {
+				const dialog = document.createElement("dialog");
+				const dialogBase = document.createTextNode("Please select a file");
+				dialog.appendChild(dialogBase);
+				const datamap = data.map((data) => {
+					const newDiv = document.createElement("div");
+					const newButton = document.createElement("button");
+					newButton.className = "loadList";
+					//newButton.onclick = function() {selectFile()};
+					newButton.ondblclick = function() {dialog.close(), loadImage(ctx, data.path)};
+					const textNode = document.createTextNode(data.path);
+					newButton.appendChild(textNode);
+					newDiv.appendChild(newButton);
+					dialog.appendChild(newDiv);
+				})
+				document.body.appendChild(dialog);
+				dialog.showModal();
+				}
+			);
+		}
+	})
+	.catch(err => {
+		alert(err);
+	})
+}
+
+async function loadImage(ctx, data) {
+	console.log(data);
+	var imageFile = new Image();
+	//const url = "http://lautangrafit.nl/images/" + data;
+	const url = "http://localhost:3000/images/" + data;
+	const response = await fetch(url, {
+		headers: {"Content-type" : "application/json"
+			}
+		}
+	)
+	.then(response => {
+		if (response.ok) {
+			return response.text()
+			.then((data) => {
+				//console.log(data);
+				pizza = "data:image\/png;base64," + data;
+				imageFile.src = pizza;
+				console.log( "data:image\/png;base64," + data)
+			})
+			.then(() => ctx.reset())
+			.then(() => ctx.drawImage(imageFile, 0, 0));
+		}
+	})
 }
