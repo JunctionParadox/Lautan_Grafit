@@ -1,2 +1,5 @@
 node_modules
 .env
+src/api/images
+src/api/temp
+cypress/screenshots
