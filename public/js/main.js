@@ -11,6 +11,7 @@ const lock = document.getElementById("lockToggle");
 const reset = document.getElementById("resetTool");
 const fileList = document.getElementById("fileList");
 const fileButton = document.getElementById("file");
+const account = document.getElementById("account");
 const ctx = canvas.getContext("2d");
 var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 var data = imageData.data;
@@ -218,6 +219,7 @@ function resetCanvas(ctx) {
 }
 
 fileButton.onclick = function() {showFileList()};
+account.onclick = function() {showLoginDialog()};
 
 function showFileList() {
 	const optionList = document.getElementById("optionList")
@@ -235,18 +237,30 @@ function showSaveDialog() {
 	save.onclick = function() {saveCanvas()};
 }
 
+function showLoginDialog() {
+	const loginDialog = document.getElementById("loginDialog")
+	loginDialog.showModal();
+	const login = document.getElementById("loginForm");
+	login.onsubmit = function(e) {e.preventDefault(), loginDialog.close(), loginUser()};
+}
+
 async function saveCanvas() {
 	var value = document.getElementById("saveFileName").value;
+	const cookie = (document.cookie.match(/^(?:.*;)?\s*UserAuth\s*=\s*([^;]+)(?:.*)?$/)||[,null])[1]
 	const data = canvas.toDataURL("image/png")
 	//const url = "http://lautangrafit.nl/images/" + value;
 	const url = "http://localhost:3000/images/" + value;
 	const response = await fetch(url, {
 		method: "POST",
 		body: data,
+		credentials: "omit",
+		headers: {
+			UserAuth: cookie
+		}
 	})
 	.then(response => {
 		if (response.ok) return response;
-		else throw Error("Server returned ${response.status}: ${repsonse.statusText}") 
+		else throw Error(`Server returned ${response.status}: ${repsonse.statusText}`) 
 	})
 	.catch(err => {
 		alert(err);
@@ -258,7 +272,13 @@ async function saveCanvas() {
 async function loadImageList() {
 	//const url = "http://lautangrafit.nl/images/"
 	const url = "http://localhost:3000/images/"
-	const response = await fetch(url)
+	const cookie = (document.cookie.match(/^(?:.*;)?\s*UserAuth\s*=\s*([^;]+)(?:.*)?$/)||[,null])[1]
+	const response = await fetch(url, {
+		credentials: "omit",
+		headers: {
+			UserAuth: cookie
+		}
+	})
 	.then(response => {
 		if (response.ok) {
 			return response.json()
@@ -307,7 +327,8 @@ async function loadImage(ctx, data) {
 				imageFile.src = pizza;
 				console.log( "data:image\/png;base64," + data)
 			})
-			.then(() => ctx.fillStyle = "#FFFFFF", ctx.fillRect(0, 0, canvas.width, canvas.height))
+			.then(() => ctx.fillStyle = "#FFFFFF")
+			.then(() => ctx.fillRect(0, 0, canvas.width, canvas.height))
 			.then(() => ctx.drawImage(imageFile, 0, 0));
 		}
 	})
@@ -325,7 +346,7 @@ async function initialize() {
 				return response.text()
 				.then((data) => {
 					console.log(data)
-					document.cookie = `Session=${data}; Secure`;
+					document.cookie = `Session=${data};`;
 				})
 			}
 		})
@@ -351,7 +372,8 @@ async function loadTemp() {
 					imageFile.src = pizza;
 					console.log( "data:image\/png;base64," + data)
 				})
-				.then(() => ctx.fillStyle = "#FFFFFF", ctx.fillRect(0, 0, canvas.width, canvas.height))
+				.then(() => ctx.fillStyle = "#FFFFFF")
+				.then(() => ctx.fillRect(0, 0, canvas.width, canvas.height))
 				.then(() => ctx.drawImage(imageFile, 0, 0));
 			}
 		})
@@ -380,4 +402,29 @@ async function saveTemp() {
 	else {
 		document.cookie = `Haha='killyourself'; Secure`;
 	}
+}
+
+async function loginUser() {
+	const name = document.getElementById("loginUserName").value;
+	const pass = document.getElementById("loginPassword").value;
+	const formData = new FormData();
+	formData.append("name", name);
+	formData.append("password", pass);
+	formData.forEach((value,key) => {
+  		console.log(key+" "+value)
+	});
+	const url = "http://localhost:3000/login/";
+		const response = await fetch(url, {
+			method: "POST",
+			body: formData
+		})
+		.then(response => {
+			if (response.ok) {
+				return response.text()
+				.then((data) => {
+					console.log(data)
+					document.cookie = `UserAuth=${data};`;
+			})
+		}
+	})
 }
