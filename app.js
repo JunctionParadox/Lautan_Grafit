@@ -14,7 +14,6 @@ const checkAuthToken = require('./src/auth/checkauthtoken');
 const generateSessionToken = require('./src/token/sessionid');
 const con = require('./data/db_connection');
 const cors = require('@koa/cors');
-require('dotenv').config({ path: "./.env" });
 
 const app = module.exports = new Koa();
 const router = new Router();
