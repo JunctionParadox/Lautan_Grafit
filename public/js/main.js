@@ -249,7 +249,7 @@ async function saveCanvas() {
 	const cookie = (document.cookie.match(/^(?:.*;)?\s*UserAuth\s*=\s*([^;]+)(?:.*)?$/)||[,null])[1]
 	const data = canvas.toDataURL("image/png")
 	//const url = "http://lautangrafit.nl/images/" + value;
-	const url = "http://localhost:3000/images/" + value;
+	const url = "http://145.44.235.36/images/" + value;
 	const response = await fetch(url, {
 		method: "POST",
 		body: data,
@@ -271,7 +271,7 @@ async function saveCanvas() {
 
 async function loadImageList() {
 	//const url = "http://lautangrafit.nl/images/"
-	const url = "http://localhost:3000/images/"
+	const url = "http://145.44.235.36/images/"
 	const cookie = (document.cookie.match(/^(?:.*;)?\s*UserAuth\s*=\s*([^;]+)(?:.*)?$/)||[,null])[1]
 	const response = await fetch(url, {
 		credentials: "omit",
@@ -312,7 +312,7 @@ async function loadImage(ctx, data) {
 	console.log(data);
 	var imageFile = new Image();
 	//const url = "http://lautangrafit.nl/images/" + data;
-	const url = "http://localhost:3000/images/" + data;
+	const url = "http://145.44.235.36/images/" + data;
 	const response = await fetch(url, {
 		headers: {"Content-type" : "application/json"
 			}
@@ -339,7 +339,7 @@ async function initialize() {
 		loadTemp();
 	}
 	else {
-		const url = "http://localhost:3000/session/"
+		const url = "http://145.44.235.36/session/"
 		const response = await fetch(url)
 		.then(response => {
 			if (response.ok) {
@@ -357,7 +357,7 @@ async function loadTemp() {
 	var imageFile = new Image();
 	const cookie = (document.cookie.match(/^(?:.*;)?\s*Session\s*=\s*([^;]+)(?:.*)?$/)||[,null])[1]
 	if (cookie != null) {
-		const url = "http://localhost:3000/temp/" + cookie
+		const url = "http://145.44.235.36/temp/" + cookie
 		const response = await fetch(url, {
 			method: "GET",
 			headers: {
@@ -387,7 +387,7 @@ async function saveTemp() {
 	const data = canvas.toDataURL("image/png");
 	const cookie = (document.cookie.match(/^(?:.*;)?\s*Session\s*=\s*([^;]+)(?:.*)?$/)||[,null])[1]
 	if (cookie != null) {
-		const url = "http://localhost:3000/temp/" + cookie
+		const url = "http://145.44.235.36/temp/" + cookie
 		const response = await fetch(url, {
 			method: "POST",
 			body: data,
@@ -413,7 +413,7 @@ async function loginUser() {
 	formData.forEach((value,key) => {
   		console.log(key+" "+value)
 	});
-	const url = "http://localhost:3000/login/";
+	const url = "http://145.44.235.36/login/";
 		const response = await fetch(url, {
 			method: "POST",
 			body: formData
