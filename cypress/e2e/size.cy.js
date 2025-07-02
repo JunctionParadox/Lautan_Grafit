@@ -9,7 +9,7 @@ describe('Pencil size test', () => {
 		    .trigger('mouseup', 300, 200, { eventConstructor: 'MouseEvent', force: true })
 		    .screenshot({overwrite: true});
 
-        cy.get('#pencilSize').invoke('val', 35).trigger('input');
+        cy.get('#pencilsize').invoke('val', 35).trigger('input');
 
         cy.get('#defaultCanvas')
             .trigger('mousedown', 600, 200, { eventConstructor: 'MouseEvent', force: true})
