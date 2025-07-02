@@ -27,6 +27,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
+    - name: generic build test
+      run: npm run construct --if-present
 
     - name: jest tests
       run: npm test
