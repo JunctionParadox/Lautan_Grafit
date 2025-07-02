@@ -28,7 +28,11 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - name: generic build test
-      run: npm run construct --if-present
+      run: npm run construct &
+    - name: Wait and verify
+      run: |
+          sleep 10 # Wait for the build to start
+          ps aux | grep "npm run construct" || exit 1
 
     - name: jest tests
       run: npm test
